@@ -1,5 +1,6 @@
 #include <string.h>
 #include "pwd_checker.h"
+#include <assert.h>
 
 /*
 Password checker
@@ -18,22 +19,27 @@ For the simplicity of this exercise:
 - You can assume that the first and last name will never be the empty string
 */
 
+
+
 /* Returns true if the length of PASSWORD is at least 10, false otherwise */
 bool check_length(const char *password) {
     int length = strlen(password);
-    bool meets_len_req = (length <= 10);
+    bool meets_len_req = (length >= 10);
     return meets_len_req;
 }
 
 /* Returns true if LETTER is in the range [LOWER, UPPER], false otherwise */
 bool check_range(char letter, char lower, char upper) {
-    bool is_in_range = (letter > lower && letter < upper);
+    bool is_in_range = (letter >= lower && letter <= upper);
     return is_in_range;
 }
 
 /* Returns true if PASSWORD contains at least one upper case letter, false otherwise */
 bool check_upper(const char *password) {
-    while (password != '\0') {
+    while (*password != '\0') 
+    /* First Error: To check for the end of a string pointed to by password, you should use the dereference operator * to access the value pointed to by password and then compare it with '\0'. */
+    
+    {
         bool is_in_range = check_range(*password, 'A', 'Z');
         if (is_in_range) {
             return true;
@@ -57,8 +63,10 @@ bool check_lower(const char *password) {
 
 /* Returns true if PASSWORD contains at least one number, false otherwise */
 bool check_number(const char *password) {
-    while (password != '\0') {
-        if (check_range(password, 0, 9)) {
+    while (*password != '\0') {
+        if (check_range(*password, '0', '9')) 
+        /* Error warning: mismatch between arguments. To resolve this warning, you need to ensure that you're passing the correct type of argument to check_range.add *sign with the password. */
+         {
             return true;
         }
         ++password;
@@ -72,18 +80,23 @@ bool check_name(const char *first_name, const char *last_name, const char *passw
         To exit the man pages, press 'q' */
     /* Hint: a NULL pointer will evaluate to False in a logical statement while a non-NULL pointer
         will evaluate to True */
-    const char *first = strstr(*password, first_name);
+    const char *first = strstr(password, first_name);
     const char *last = strstr(password, last_name);
-    return (first && last);
+    return (!first && !last);
 }
 
 /* Returns true if PASSWORD meets the conditions specified above */
 bool check_password(const char *first_name, const char *last_name, const char *password) {
     bool length, upper, lower, number, name;
     lower = check_lower(password);
+    //assert(lower);
     length = check_length(password);
+    //assert(length);
     name = check_name(first_name, last_name, password);
+    //assert(name);
     number = check_number(password);
+    //assert(number);
     upper = check_upper(password);
+    //assert(upper);
     return (lower && length && name && upper && number);
 }

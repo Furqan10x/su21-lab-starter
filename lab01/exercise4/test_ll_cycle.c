@@ -16,6 +16,7 @@ int main(void) {
     nodes[0].next = &nodes[1];
     nodes[1].next = &nodes[2];
     nodes[2].next = &nodes[3];
+    //nodes[3].next = &nodes[0];
     printf("Checking first list for cycles. There should be none, ll_has_cycle says it has %s cycle\n", ll_has_cycle(&nodes[0]) ? "a" : "no");
     assert(!ll_has_cycle(&nodes[0]));
 
